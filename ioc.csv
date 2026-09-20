@@ -1,0 +1,11 @@
+type,value,first_seen,confidence,note
+domain,weplayesportse.com,2026-09,high,Primary phishing domain — active case September 2026
+domain,signgamergo.com,2026-09,medium,Companion login page seen in same chain
+domain,weplays.de,2023,medium,Earlier "streamer" lure
+domain,login.weplay-streams.pro,2023-10,high,Confirmed scam by se.keep community warning
+discord_server_id,543078031527510026,2018 (legit) / 2023+ (abused),high,Former official WePlay Compete server, now recruitment ground
+discord_invite,discord.com/invite/xHXZpHcx,2026-09,high,Active invite discovered via public Widget API
+discord_account,skubiduy1337 (created 2026-08-14),2026-09-17,high,Verification-stage operator, disposable account tied to this campaign
+steam_account,Westward (7yr service / Level 10 / 18 games),2026-09,high,Recruiter account, aged/mismatched activity profile
+keyword,weplayrocketleague,2026-09-20 17:16,medium,Possible routing keyword to specific phishing scenario
+compromised_channel,twitch.tv/Weplay_RocketLeague (65953 followers),2026-09,high,Legitimate official channel, Discord button routes to compromised server
