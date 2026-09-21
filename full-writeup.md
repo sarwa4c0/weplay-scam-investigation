@@ -4,7 +4,7 @@
 
 ## Case Summary
 
-In September 2026, the owner of a Steam account worth $1,085 was targeted in a spear-phishing social engineering attack: contact was made under the pretext of an interviewer working with the esports commentary platform "WePlay," discussing a Dota 2-themed interview, followed by an invitation to register on an "advertiser" website and verify the account via Steam. Verification led to a phishing domain hosting a fake browser-in-the-browser (BitB) Steam login window, mimicking the real steamcommunity.com/openid/login page.
+In September 2026, the owner of a Steam account was targeted in a spear-phishing social engineering attack: contact was made under the pretext of an interviewer working with the esports commentary platform "WePlay," discussing a Dota 2-themed interview, followed by an invitation to register on an "advertiser" website and verify the account via Steam. Verification led to a phishing domain hosting a fake browser-in-the-browser (BitB) Steam login window, mimicking the real steamcommunity.com/openid/login page.
 
 The objective was to obtain the Steam login/password and intercept 2FA in real time, with the likely end goal of stealing the account's skins/inventory or the account itself.
 
