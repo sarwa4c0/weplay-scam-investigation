@@ -4,7 +4,7 @@
 
 ## Case Summary
 
-In September 2026, the owner of a Steam account was targeted in a spear-phishing social engineering attack: contact was made under the pretext of an interviewer working with the esports commentary platform "WePlay," discussing a Dota 2-themed interview, followed by an invitation to register on an "advertiser" website and verify the account via Steam. Verification led to a phishing domain hosting a fake browser-in-the-browser (BitB) Steam login window, mimicking the real steamcommunity.com/openid/login page.
+In September 2026, the owner of a Steam account worth $1,085 was targeted in a spear-phishing social engineering attack: contact was made under the pretext of an interviewer working with the esports commentary platform "WePlay," discussing a Dota 2-themed interview, followed by an invitation to register on an "advertiser" website and verify the account via Steam. Verification led to a phishing domain hosting a fake browser-in-the-browser (BitB) Steam login window, mimicking the real steamcommunity.com/openid/login page.
 
 The objective was to obtain the Steam login/password and intercept 2FA in real time, with the likely end goal of stealing the account's skins/inventory or the account itself.
 
@@ -139,6 +139,37 @@ This closes out the infrastructure analysis with a genuine, actionable pivot: an
 **Reports filed (2026-09-21):** Abuse reports were submitted through Cloudflare's phishing report form (`abuse.cloudflare.com/phishing`) for both `signnotclo.com` and `signgamergo.com`, each citing the confirmed endpoint, request/response evidence, and IOCs documented above; both reports opted to forward to the respective hosting provider (Cloudflare automatically relays to origin hosts/owners as part of its process) while withholding reporter contact details from that forward. This is the point where the investigation transitions from analysis to actual remediation — status of any resulting takedown wasn't yet known at time of writing and would need a follow-up check.
 
 ## Infrastructure
+
+### Attack Chain & Infrastructure Diagram
+
+```mermaid
+flowchart TD
+    V["Victim (Steam chat + Discord voice call)"]
+    L["weplayesportse.com\n(brand-spoofing lure page)"]
+    P["signgamergo.com\n(BitB fake Steam login form)"]
+    R["signnotclo.com\n(credential-relay backend, iframe)"]
+    EP["POST /9e3403dd6e\n(unified auth-relay endpoint)"]
+    PW["doAuth=1&login=...&password=...\n(plain password path)"]
+    QR["doqr=1&qrdata=https://s.team/q/1/id\n(QR-relay path)"]
+    STEAM["Real Steam QR session\n(s.team - legitimate Steam infra)"]
+    ORIGIN["193.148.56.133\nPartner Hosting LTD / AS209946\n(real, unmasked origin)"]
+    CF["Cloudflare edge\n(signnotclo.com only)"]
+
+    V -->|"clicks link"| L
+    L -->|"redirects to"| P
+    P -->|"loads as iframe"| R
+    R --> EP
+    EP --> PW
+    EP --> QR
+    QR -->|"requests genuine session from"| STEAM
+    QR -->|"relays QR to victim; victim's own\nSteam Mobile app approves attacker's session"| V
+
+    L -.->|"resolves to (no CF headers on :80)"| ORIGIN
+    P -.->|"resolves to (no CF headers on :80)"| ORIGIN
+    R -.->|"resolves to (CF-fronted, even on :80)"| CF
+```
+
+*Solid arrows: user-facing / request flow. Dashed arrows: DNS resolution / hosting relationship, confirmed via passive lookups (see below). Note that `signnotclo.com` sits behind Cloudflare while the other two tiers share a directly-reachable origin — this asymmetry is what led to identifying `193.148.56.133`.*
 
 ### Clone Domains (Timeline of Appearance)
 
